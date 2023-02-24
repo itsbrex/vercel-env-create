@@ -60,31 +60,32 @@ if (existingFiles.length > 0) {
 	});
 
 	rl.question(
-		'Do you want to:\n1. Delete all existing .env files and create new ones\n2. Cancel and exit\nEnter your choice (1-2): ',
+		'\nDo you want to:\n1. Overwrite existing .env files and create new ones\n2. Cancel and exit\n\nEnter your choice (1-2): ',
 		(choice) => {
 			// Handle the user's choice
 			if (choice === '1') {
 				existingFiles.forEach((filePath) => fs.unlinkSync(filePath));
-				console.log('Deleted existing .env files');
+				console.log('\nDeleted existing .env files\n');
 			} else if (choice === '2') {
-				console.log('Exiting...');
+				console.log('Exiting...\n');
 				process.exit(1);
 			} else {
-				console.log('Invalid choice. Exiting...');
+				console.log('\nInvalid choice. Exiting...\n');
 				process.exit(1);
 			}
 
 			rl.close();
 
 			createEnvFiles(() => {
-				console.log('Environment files created successfully');
+				console.log('\nEnvironment files created successfully');
 				process.exit();
 			});
 		},
 	);
 } else {
+	// If no .env files exist, create them
 	createEnvFiles(() => {
-		console.log('Environment files created successfully');
+		console.log('\nEnvironment files created successfully');
 		process.exit();
 	});
 }
@@ -122,5 +123,6 @@ function createEnvFiles(callback) {
 		}
 	}
 
+	// console.log('\nEnvironment files created successfully');
 	callback();
 }

@@ -75,38 +75,52 @@ if (existingFiles.length > 0) {
 			}
 
 			rl.close();
+
+			createEnvFiles(() => {
+				console.log('Environment files created successfully');
+				process.exit();
+			});
 		},
 	);
+} else {
+	createEnvFiles(() => {
+		console.log('Environment files created successfully');
+		process.exit();
+	});
 }
 
-// Call the searchDirectory function to find all references to environment variables
-searchDirectory(currentDirectory);
+function createEnvFiles(callback) {
+	// Call the searchDirectory function to find all references to environment variables
+	searchDirectory(currentDirectory);
 
-// Create the environment-specific .env files
-for (const suffix of suffixes) {
-	const envFilePath = path.join(currentDirectory, `.env${suffix}`);
-	const envFileContent = [];
+	// Create the environment-specific .env files
+	for (const suffix of suffixes) {
+		const envFilePath = path.join(currentDirectory, `.env${suffix}`);
+		const envFileContent = [];
 
-	// if suffix is not empty then add ENV_FILE variable
-	if (suffix !== '') {
-		envFileContent.push(`ENV_FILE=.env${suffix}`);
-	}
+		// if suffix is not empty then add ENV_FILE variable
+		if (suffix !== '') {
+			envFileContent.push(`ENV_FILE=.env${suffix}`);
+		}
 
-	for (const envVar of envVars[suffix]) {
-		if (suffix === '' && envVar === 'ENV_FILE') {
-			continue;
-		} else if (suffix !== '' && envVar === 'ENV_FILE') {
-			envFileContent.push(`${envVar}=.${suffix}`);
+		for (const envVar of envVars[suffix]) {
+			if (suffix === '' && envVar === 'ENV_FILE') {
+				continue;
+			} else if (suffix !== '' && envVar === 'ENV_FILE') {
+				envFileContent.push(`${envVar}=.${suffix}`);
+			} else {
+				envFileContent.push(`${envVar}=`);
+			}
+		}
+
+		fs.writeFileSync(envFilePath, envFileContent.join('\n'));
+
+		if (suffix === '') {
+			console.log('.env file created');
 		} else {
-			envFileContent.push(`${envVar}=`);
+			console.log(`.env${suffix} file created`);
 		}
 	}
 
-	fs.writeFileSync(envFilePath, envFileContent.join('\n'));
-
-	if (suffix === '') {
-		console.log('.env file created');
-	} else {
-		console.log(`.env${suffix} file created`);
-	}
+	callback();
 }

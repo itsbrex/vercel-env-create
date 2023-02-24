@@ -1,0 +1,82 @@
+#!/usr/bin/env python3
+import os
+import re
+import sys
+
+# Define the pattern for environment variables
+pattern = r'process.env\.(\w+)'
+
+# Define the list of suffixes for environment-specific files
+suffixes = ['', '.local', '.development', '.production']
+
+# Create a dictionary to store the found environment variables for each suffix
+env_vars = {suffix: set() for suffix in suffixes}
+
+# Define a function to recursively search for references to environment variables
+def search_directory(directory):
+    # Define a list of directory names to exclude
+    exclude_dirs = ['node_modules']
+
+    for item in os.listdir(directory):
+        path = os.path.join(directory, item)
+        if os.path.isdir(path) and not item.startswith('.') and item not in exclude_dirs:
+            search_directory(path)
+        elif os.path.isfile(path):
+            with open(path, 'rb') as file:  # open file in binary mode
+                contents = file.read().decode('utf-8', errors='replace')  # decode contents
+                matches = re.findall(pattern, contents)
+                for match in matches:
+                    for suffix in suffixes:
+                        if match not in env_vars[suffix]:
+                            env_vars[suffix].add(match)
+
+# Get the current directory
+current_directory = os.getcwd()
+
+# Check if any .env files already exist in the current directory
+env_file_paths = [os.path.join(current_directory, f'.env{suffix}') for suffix in suffixes]
+existing_files = [env_file_path for env_file_path in env_file_paths if os.path.exists(env_file_path)]
+
+if existing_files:
+    # If any .env files already exist, prompt the user for how to proceed
+    print('The following .env files already exist in the current directory:')
+    for existing_file in existing_files:
+        print(f'- {existing_file}')
+    print('Do you want to:')
+    print('1. Delete all existing .env files and create new ones')
+    print('2. Cancel and exit')
+    choice = input('Enter your choice (1-2): ')
+
+    # Handle the user's choice
+    if choice == '1':
+        for existing_file in existing_files:
+            os.remove(existing_file)
+        print('Deleted existing .env files')
+    elif choice == '2':
+        print('Exiting...')
+        sys.exit()
+    else:
+        print('Invalid choice. Exiting...')
+        sys.exit()
+
+# Call the search_directory function to find all references to environment variables
+search_directory(current_directory)
+
+# Create the environment-specific .env files
+for suffix in suffixes:
+    env_file_path = os.path.join(current_directory, f'.env{suffix}')
+    with open(env_file_path, 'w') as file:
+        # if suffix is not empty then write ENV_FILE variable
+        if suffix != '':
+            file.write(f'ENV_FILE=.env{suffix}\n')
+        for env_var in env_vars[suffix]:
+            if suffix == '' and env_var == 'ENV_FILE':
+                continue
+            elif suffix != '' and env_var == 'ENV_FILE':
+                file.write(f'{env_var}=.{suffix}\n')
+            else:
+                file.write(f'{env_var}=\n')
+    if suffix == '':
+        print('.env file created')
+    else:
+        print(f'.env{suffix} file created') 

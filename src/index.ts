@@ -16,13 +16,16 @@ for (const suffix of suffixes) {
 function searchDirectory(directory: string): void {
 	const excludeDirs = ['node_modules'];
 
+	// Additional file extensions to search for
+	const extensions = ['.js', '.ts', '.jsx', '.tsx', '.html', '.css'];
+
 	fs.readdirSync(directory).forEach((item) => {
 		const itemPath = path.join(directory, item);
 		const stat = fs.statSync(itemPath);
 
 		if (stat.isDirectory() && !item.startsWith('.') && !excludeDirs.includes(item)) {
 			searchDirectory(itemPath);
-		} else if (stat.isFile() && path.extname(itemPath) === '.js') {
+		} else if (stat.isFile() && extensions.includes(path.extname(itemPath))) {
 			const contents = fs.readFileSync(itemPath, 'utf-8');
 			let match;
 
@@ -107,9 +110,9 @@ function createEnvFiles() {
 		fs.writeFileSync(envFilePath, envFileContent.join('\n'));
 
 		if (suffix === '') {
-			console.log('✅ - .env file created');
+			console.log('✅  - .env file created');
 		} else {
-			console.log(`✅ - .env${suffix} file created`);
+			console.log(`✅  - .env${suffix} file created`);
 		}
 	}
 

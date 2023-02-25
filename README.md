@@ -69,3 +69,37 @@ Licensed under the [MIT](https://github.com/itsbrex/vercel-env-create/blob/main/
 ## Thanks
 
 Shoutout to [HiDeoo](https://github.com/HiDeoo) for his work on [`vercel-env-push`](https://github.com/HiDeoo/vercel-env-push) and his [`create-app`](https://github.com/HiDeoo/create-app) CLI tool that this project was bootstrapped with. 🙏
+
+```
+vercel-env-create
+├─ 📁.github
+│  └─ 📁workflows
+│     ├─ 📄integration.yml
+│     └─ 📄release.yml
+├─ 📁.husky
+│  ├─ 📁_
+│  │  ├─ 📄.gitignore
+│  │  └─ 📄husky.sh
+│  └─ 📄pre-commit
+├─ 📁.vscode
+│  └─ 📄settings.json
+├─ 📁src
+│  └─ 📄index.ts
+├─ 📁test
+│  ├─ 📄createEnvFiles.test.ts
+│  └─ 📄createEnvFilesWithExistingFiles.test.ts
+├─ 📄.env
+├─ 📄.env.development
+├─ 📄.env.production
+├─ 📄.eslintrc.json
+├─ 📄.gitignore
+├─ 📄.nvmrc
+├─ 📄.prettierignore
+├─ 📄LICENSE
+├─ 📄README.md
+├─ 📄build.config.ts
+├─ 📄package.json
+├─ 📄pnpm-lock.yaml
+├─ 📄test-envs-file.js
+└─ 📄tsconfig.json
+```

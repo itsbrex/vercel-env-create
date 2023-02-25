@@ -9,8 +9,8 @@
 </div>
 
 <div align="center">
-  <a href="https://github.com/itsbrex/vercel-env-create/actions/workflows/integration.yml">
-    <img alt="Integration Status" src="https://github.com/itsbrex/vercel-env-create/actions/workflows/integration.yml/badge.svg" />
+  <!-- <a href="https://github.com/itsbrex/vercel-env-create/actions/workflows/integration.yml">
+    <img alt="Integration Status" src="https://github.com/itsbrex/vercel-env-create/actions/workflows/integration.yml/badge.svg" /> -->
   </a>
   <a href="https://github.com/itsbrex/vercel-env-create/blob/main/LICENSE">
     <img alt="License" src="https://badgen.net/github/license/itsbrex/vercel-env-create" />

@@ -1,5 +1,5 @@
 {
-  "name": "vercel-env-extract",
+  "name": "vercel-env-create",
   "version": "0.0.1",
   "license": "MIT",
   "description": "",
@@ -41,12 +41,12 @@
     "vercel",
     "env-file"
   ],
-  "homepage": "https://github.com/itsbrex/vercel-env-extract",
+  "homepage": "https://github.com/itsbrex/vercel-env-create",
   "repository": {
     "type": "git",
-    "url": "https://github.com/itsbrex/vercel-env-extract.git"
+    "url": "https://github.com/itsbrex/vercel-env-create.git"
   },
-  "bugs": "https://github.com/itsbrex/vercel-env-extract/issues",
+  "bugs": "https://github.com/itsbrex/vercel-env-create/issues",
   "prettier": "@hideoo/prettier-config",
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown --cache",

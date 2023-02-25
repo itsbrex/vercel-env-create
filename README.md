@@ -8,11 +8,11 @@
 </div>
 
 <div align="center">
-  <a href="https://github.com/HiDeoo/vercel-env-extract/actions/workflows/integration.yml">
-    <img alt="Integration Status" src="https://github.com/HiDeoo/vercel-env-extract/actions/workflows/integration.yml/badge.svg" />
+  <a href="https://github.com/itsbrex/vercel-env-extract/actions/workflows/integration.yml">
+    <img alt="Integration Status" src="https://github.com/itsbrex/vercel-env-extract/actions/workflows/integration.yml/badge.svg" />
   </a>
-  <a href="https://github.com/HiDeoo/vercel-env-extract/blob/main/LICENSE">
-    <img alt="License" src="https://badgen.net/github/license/HiDeoo/vercel-env-extract" />
+  <a href="https://github.com/itsbrex/vercel-env-extract/blob/main/LICENSE">
+    <img alt="License" src="https://badgen.net/github/license/itsbrex/vercel-env-extract" />
   </a>
   <br />
 </div>

@@ -30,3 +30,4 @@ releases
 yarn-debug.log*
 yarn-error.log*
 .history
+.env

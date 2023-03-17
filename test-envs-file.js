@@ -5,6 +5,7 @@ const DATABASE_USER = process.env.DATABASE_USER
 const DATABASE_OWNER = process.env.DATABASE_OWNER
 const DATABASE_DOG = process.env.DATABASE_DOG
 const DATABASE_CAT = process.env.DATABASE_CAT
+const DATABASE_OWL = process.env.DATABASE_OWL
 
 console.log(`Database host: ${DATABASE_HOST}`)
 console.log(`Database name: ${DATABASE_NAME}`)

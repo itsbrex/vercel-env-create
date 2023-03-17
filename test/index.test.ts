@@ -1,8 +1,10 @@
-import * as index from '../src/index'
-import { afterEach, describe, expect, it } from 'vitest'
 import { promises as fs } from 'node:fs'
 import * as path from 'node:path'
 import * as process from 'node:process'
+
+import { afterEach, describe, expect, it } from 'vitest'
+
+import * as index from '../src/index'
 
 const currentDirectory = process.cwd()
 const envSuffixes = ['', '.example', '.local', '.development', '.production']

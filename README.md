@@ -3,7 +3,7 @@
   <p>The missing <code>vercel env create</code> command</p>
   <p>
     <a href="https://github.com/itsbrex/vercel-env-create" title="Screenshot of vercel-env-create">
-      <img alt="Screenshot of vercel-env-create" src="https://socialify.git.ci/itsbrex/vercel-env-create/image?description=1&descriptionEditable=Easily%20manage%20your%20local%20and%20Vercel%20deployment%20environment%20variables%20and%20.env%20files&font=Inter&name=1&owner=1&pattern=Floating%20Cogs&stargazers=1&theme=Auto" width="600" />
+      <img alt="Screenshot of vercel-env-create" src="https://socialify.git.ci/itsbrex/vercel-env-extract/image?description=1&descriptionEditable=Auto-generate%20and%20maintain%20your%20project%27s%20.env%20files&name=1&owner=1&pattern=Solid&stargazers=1&theme=Auto" width="600" />
     </a>
   </p>
 </div>
@@ -35,13 +35,17 @@ npm install -g vercel-env-create
 
 ## Usage
 
-After installing the package, you can use it in your Vercel project directory like this:
+If you installed globally, you can use it in your project directory like this to either create or update your .env files with all of the variables used in your project:
 
 ```bash
 vercel-env-create
 ```
 
-> **_NOTE: This command will OVERWRITE ALL EXISTING ENV FILES in your project root so proceed with caution!_**
+Or you can install via `npx`:
+
+```bash
+npx vercel-env-create
+```
 
 By default, the script will look for environment variables in files with the following extensions: `.js`, `.ts`, `.jsx`, `.tsx`, `.html`, and `.css`. You can add additional file extensions to search for by modifying the `extensions` array in the script.
 

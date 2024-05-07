@@ -6,7 +6,7 @@ import * as path from 'node:path'
 
 const pattern = /process.env\.(\w+)/g
 
-const suffixes = ['', '.example', '.local', '.development', '.production']
+const suffixes = ['', '.local', '.development', '.development.local', '.production', '.production.local']
 
 const envVars: Record<string, Set<string>> = {}
 for (const suffix of suffixes) {
@@ -48,15 +48,22 @@ const exampleFiles = ['.env.example', '.env.local.example'].map((example) => pat
 
 const existingFiles = envFilePaths.filter(fs.existsSync)
 
+let exampleExists = false
 for (const example of exampleFiles) {
   if (fs.existsSync(example)) {
+    const exampleContent = fs.readFileSync(example, 'utf8')
     for (const filePath of envFilePaths) {
       if (!fs.existsSync(filePath)) {
-        fs.copyFileSync(example, filePath)
+        fs.writeFileSync(filePath, exampleContent)
       }
     }
+    exampleExists = true
     break
   }
+}
+
+if (!exampleExists) {
+  searchDirectory(currentDirectory)
 }
 
 if (existingFiles.length > 0) {
@@ -68,8 +75,6 @@ if (existingFiles.length > 0) {
 export function createEnvFiles(): Promise<void> {
   return new Promise<void>((resolve, reject) => {
     try {
-      searchDirectory(currentDirectory)
-
       for (const suffix of suffixes) {
         const envFilePath = path.join(currentDirectory, `.env${suffix}`)
         const envFileContent: string[] = []
@@ -101,8 +106,6 @@ export function createEnvFiles(): Promise<void> {
 export function appendEnvVariables(): Promise<void> {
   return new Promise<void>((resolve, reject) => {
     try {
-      searchDirectory(currentDirectory)
-
       for (const suffix of suffixes) {
         const envFilePath = path.join(currentDirectory, `.env${suffix}`)
         const envFileContent: string[] = []

@@ -3,7 +3,7 @@
   <p>The missing <code>vercel env create</code> command</p>
   <p>
     <a href="https://github.com/itsbrex/vercel-env-create" title="Screenshot of vercel-env-create">
-      <img alt="Screenshot of vercel-env-create" src="https://socialify.git.ci/itsbrex/vercel-env-extract/image?description=1&descriptionEditable=Auto-generate%20and%20maintain%20your%20project%27s%20.env%20files&name=1&owner=1&pattern=Solid&stargazers=1&theme=Auto" width="600" />
+      <img alt="Screenshot of vercel-env-create" src="https://socialify.git.ci/itsbrex/vercel-env-create/image?description=1&descriptionEditable=Auto-generate%20and%20maintain%20your%20project%27s%20.env%20files&name=1&owner=1&pattern=Solid&stargazers=1&theme=Auto" width="600" />
     </a>
   </p>
 </div>
@@ -19,52 +19,138 @@
 </div>
 <p>
 
-Easily manage your local and Vercel deployment environment variables for `local`, `development`, `preview`, and `production`.
+Easily create `.env` files and keep them in sync with the environment variables referenced in your codebase.
+This tool scans supported source files for `process.env.*` (or `import.meta.env.*`) references,
+then creates/appends entries in the environment templates Next.js and Vercel load.
 
-`vercel-env-create` is a Node.js script that scans your project for all referenced `process.env` variables and creates separate `.env` files each environment in the root of your project's directory.
+## Supported `.env` files
 
-This makes it easy to manage your local development and test environments, as well as each of your Vercel deployment environments (`development`, `preview`, and `production`).
+This project now only targets the env files that Next.js and Vercel workflows use:
+
+- `.env`
+- `.env.local`
+- `.env.development`
+- `.env.development.local`
+- `.env.test`
+- `.env.test.local`
+- `.env.production`
+- `.env.production.local`
+
+The following conventions match current docs:
+
+- local overrides are loaded from `.env.local` (except in test environments)
+- environment-specific defaults come from `.env.$(NODE_ENV)`
+- environment-specific secrets come from `.env.$(NODE_ENV).local`
+- test mode uses `.env.test` and `.env.test.local`
 
 ## Installation
 
-You can install this package using `npm`:
+Install with npm:
 
 ```bash
 npm install -g vercel-env-create
 ```
 
-## Usage
-
-If you installed globally, you can use it in your project directory like this to either create or update your .env files with all of the variables used in your project:
-
-```bash
-vercel-env-create
-```
-
-Or you can install via `npx`:
+Or run with `npx`:
 
 ```bash
 npx vercel-env-create
 ```
 
-By default, the script will look for environment variables in files with the following extensions: `.js`, `.ts`, `.jsx`, `.tsx`, `.html`, and `.css`. You can add additional file extensions to search for by modifying the `extensions` array in the script.
+## Usage
 
-The script will create the following .env files in your project directory:
+From a project root, run:
 
-- `.env` - for your default environment
-- `.env.local` - for your local development environment
-- `.env.development` - for your development environment
-- `.env.production` - for your production environment
+```bash
+vercel-env-create
+```
 
-This makes it easy to manage separate environment variables for each environment and ensures that all environment variables in your project are appropriately defined.
+The tool:
+
+1. scans supported files under the current directory,
+2. collects variable names used in `process.env` / `import.meta.env`,
+3. creates missing env files for the supported set above,
+4. appends missing keys as blank entries while preserving existing values.
+
+### Example file scanning
+
+By default these extensions are scanned:
+
+- `.js`, `.jsx`, `.ts`, `.tsx`, `.mjs`, `.cjs`
+- `.json`, `.yaml`, `.yml`
+- `.ipynb`
+
+You can change this by calling `findReferencedEnvVars` from the module API.
+
+### Quick example
+
+Given a project with:
+
+```bash
+src/lib/db.ts
+src/app/page.tsx
+```
+
+Where those files contain:
+
+```ts
+// src/lib/db.ts
+export const dbUrl = process.env.DATABASE_URL;
+export const featureFlag = process.env['NEXT_PUBLIC_FLAG'];
+
+// src/app/page.tsx
+const token = import.meta.env.AUTH_TOKEN;
+```
+
+Running from the project root:
+
+```bash
+npx vercel-env-create
+```
+
+Creates/updates (if missing) all supported env files and adds:
+
+```bash
+# resulting files (excerpt)
+.env
+# ... existing content
+AUTH_TOKEN=
+DATABASE_URL=
+NEXT_PUBLIC_FLAG=
+```
+
+If you already have existing keys, they are preserved and only missing keys are appended.
+
+```bash
+# existing .env before
+DATABASE_URL=postgres://...
+```
+
+After running:
+
+```bash
+.env
+DATABASE_URL=postgres://...
+AUTH_TOKEN=
+NEXT_PUBLIC_FLAG=
+```
+
+## `.env.example` handling
+
+If either `.env.example` or `.env.local.example` exists:
+
+- the tool will seed new env files from the first example file it finds,
+- no new keys are appended automatically (the file contents are preserved as-is).
+
+## Notes
+
+- `.env.example` is intentionally supported for bootstrap defaults.
+- `.env*.local` files are not meant to be committed because they contain secrets.
+- If you need a stricter scan surface, import `findReferencedEnvVars` from the package and build your own wrapper.
 
 ## Contributing
 
-Contributions are welcome! If you find a bug or have a suggestion for improvement, please [open an issue](https://github.com/itsbrex/vercel-env-create/issues) or [submit a pull request](https://github.com/itsbrex/vercel-env-create/pulls).
-
-## Support
-
-If you found this project interesting or helpful, please consider [sponsoring me](https://github.com/sponsors/itsbrex) or following me [on twitter](https://twitter.com/itsbrex). <img src="https://storage.googleapis.com/saasify-assets/twitter-logo.svg" alt="twitter" height="24px" align="center"></a>
+Contributions are welcome. Open an issue or submit a pull request.
 
 ## License
 
@@ -72,4 +158,4 @@ Licensed under the [MIT](https://github.com/itsbrex/vercel-env-create/blob/main/
 
 ## Thanks
 
-Shoutout to [HiDeoo](https://github.com/HiDeoo) for his work on [`vercel-env-push`](https://github.com/HiDeoo/vercel-env-push) and his [`create-app`](https://github.com/HiDeoo/create-app) CLI tool that this project was bootstrapped with. 🙏
+Shoutout to [HiDeoo](https://github.com/HiDeoo) for `vercel-env-push` and `create-app`, which inspired this CLI.

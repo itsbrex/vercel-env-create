@@ -1,60 +1,53 @@
 {
   "name": "vercel-env-create",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "license": "MIT",
-  "description": "",
+  "description": "Generate and sync Next.js/Vercel-friendly .env templates from referenced variables.",
   "author": "itsbrex <github@itsbrex.dev> (https://itsbrex.dev)",
   "type": "module",
   "main": "./dist/index.cjs",
-  "module": "./dist/index.cjs",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "bin": "./dist/index.cjs",
+  "bin": {
+    "vercel-env-create": "./dist/cli.js"
+  },
   "exports": {
     ".": {
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs",
-      "types": "./dist/index.d.ts"
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
     }
   },
   "scripts": {
-    "dev": "unbuild --stub",
-    "build": "unbuild",
-    "test": "vitest",
-    "lint": "prettier -c . && eslint . --max-warnings=0 --fix && tsc --noEmit",
-    "prepare": "husky install",
-    "format": "prettier --write .",
-    "prepublishOnly": "pnpm run build"
+    "ci": "pnpm lint && pnpm test && pnpm typecheck && pnpm build",
+    "dev": "tsup src/index.ts --watch",
+    "build": "tsup src/index.ts src/cli.ts --dts --format cjs,esm --clean",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint src/**/*.ts test/**/*.ts",
+    "typecheck": "tsc --noEmit",
+    "format": "prettier src test --write",
+    "prepare": "husky install"
   },
   "devDependencies": {
-    "@hideoo/eslint-config": "1.1.0",
-    "@hideoo/prettier-config": "1.0.1",
-    "@hideoo/tsconfig": "1.0.0",
-    "@types/esm": "^3.2.0",
-    "@types/mocha": "^10.0.1",
-    "@types/node": "^18.15.6",
-    "chai": "^4.3.7",
-    "eslint": "8.34.0",
-    "esm": "^3.2.25",
-    "husky": "^8.0.3",
-    "lint-staged": "13.1.2",
-    "mocha": "^10.2.0",
-    "node": "link:@@types/node",
-    "prettier": "2.8.4",
-    "ts-node": "^10.9.1",
-    "typescript": "4.9.5",
-    "unbuild": "^1.1.2",
-    "vite": "^4.2.1",
-    "vitest": "^0.29.7",
-    "vitest-ts": "^1.0.0"
+    "@eslint/js": "^9.39.4",
+    "@types/node": "^22.13.9",
+    "@typescript-eslint/eslint-plugin": "^8.34.0",
+    "@typescript-eslint/parser": "^8.34.0",
+    "eslint": "^9.34.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.5.0",
+    "prettier": "^3.5.3",
+    "tsup": "^8.5.0",
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.4"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "files": [
-    "index.cjs",
     "dist"
   ],
-  "packageManager": "pnpm@7.27.1",
+  "packageManager": "pnpm@9.15.3",
   "publishConfig": {
     "access": "public"
   },
@@ -73,9 +66,7 @@
     "url": "https://github.com/itsbrex/vercel-env-create.git"
   },
   "bugs": "https://github.com/itsbrex/vercel-env-create/issues",
-  "prettier": "@hideoo/prettier-config",
   "lint-staged": {
-    "**/*": "prettier --write --ignore-unknown --cache",
-    "**/*.ts": "eslint --max-warnings=0 --fix"
+    "**/*": "prettier --write --ignore-unknown --cache"
   }
 }

@@ -68,5 +68,8 @@
   "bugs": "https://github.com/itsbrex/vercel-env-create/issues",
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown --cache"
+  },
+  "dependencies": {
+    "@clack/prompts": "^1.2.0"
   }
 }

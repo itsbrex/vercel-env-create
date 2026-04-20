@@ -135,6 +135,35 @@ AUTH_TOKEN=
 NEXT_PUBLIC_FLAG=
 ```
 
+## Push variables to Vercel
+
+Use `--push` after local sync to push discovered variable values to Vercel:
+
+```bash
+vercel-env-create --push
+```
+
+Behavior:
+
+- If your project is linked to Vercel, the linked project is used automatically.
+- If not linked, you get an interactive clack multi-select UI to choose one or more Vercel projects.
+- You can choose target environment with an interactive clack select (`development`, `preview`, `production`).
+
+Options:
+
+- `--project <name>`
+  - Target one or more projects explicitly (repeatable).
+- `--environment <name>`
+  - Set target environment without interactive selection.
+- `--env-file <file>`
+  - Source env file used for values (default: `.env`).
+- `--yes`
+  - Run non-interactively (required in non-TTY contexts).
+
+The tool uses your existing local Vercel CLI authentication (`vercel login`).
+
+If a referenced variable has no value in the source file, that variable is skipped during push.
+
 ## `.env.example` handling
 
 If either `.env.example` or `.env.local.example` exists:

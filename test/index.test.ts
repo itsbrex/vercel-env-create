@@ -4,7 +4,15 @@ import path from 'node:path';
 
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import { appendMissingVars, findReferencedEnvVars, run, SUPPORTED_ENV_FILES } from '../src/index';
+import {
+  appendMissingVars,
+  findReferencedEnvVars,
+  listVercelProjects,
+  parseEnvFile,
+  parseVercelProjectsOutput,
+  run,
+  SUPPORTED_ENV_FILES,
+} from '../src/index';
 
 const envSuffixes = SUPPORTED_ENV_FILES;
 
@@ -104,5 +112,53 @@ describe('run', () => {
       expect(exists).toBe(true);
       expect(await fs.readFile(envFilePath, 'utf8')).toContain('EXAMPLE=from-example');
     }
+  });
+});
+
+describe('env parsing helpers', () => {
+  it('parses dotenv values for pushing', () => {
+    const values = parseEnvFile(
+      ['FOO=bar', 'EMPTY=', 'QUOTE="quoted"', '#skip', 'export BAZ=hello', 'SPACED = value'].join('\n')
+    );
+
+    expect(values.get('FOO')).toBe('bar');
+    expect(values.get('EMPTY')).toBe('');
+    expect(values.get('QUOTE')).toBe('quoted');
+    expect(values.get('BAZ')).toBe('hello');
+    expect(values.get('SPACED')).toBe('value');
+  });
+
+  it('parses Vercel project list outputs with table fallback', () => {
+    const output =
+      'Name\tID\nmy-app\tprj_123abc\nblog-site\tprj_456def\n';
+
+    const projects = parseVercelProjectsOutput(output);
+    expect(projects).toEqual([
+      { name: 'my-app', id: 'prj_123abc' },
+      { name: 'blog-site', id: 'prj_456def' },
+    ]);
+  });
+
+  it('parses Vercel project list outputs with json', () => {
+    const output = JSON.stringify([
+      { name: 'app-one', id: 'prj_1' },
+      { name: 'app-two', projectId: 'prj_2' },
+    ]);
+
+    const projects = parseVercelProjectsOutput(output);
+    expect(projects).toEqual([
+      { name: 'app-one', id: 'prj_1' },
+      { name: 'app-two', id: 'prj_2' },
+    ]);
+  });
+});
+
+describe('listVercelProjects', () => {
+  it('uses command runner when provided', async () => {
+    const result = await listVercelProjects(cwd, async () =>
+      JSON.stringify([{ name: 'runner-project', id: 'prj_x' }])
+    );
+
+    expect(result).toEqual([{ name: 'runner-project', id: 'prj_x' }]);
   });
 });

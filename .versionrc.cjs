@@ -1,0 +1,26 @@
+module.exports = {
+  types: [
+    { type: 'feat', section: 'Added' },
+    { type: 'fix', section: 'Fixed' },
+    { type: 'perf', section: 'Changed' },
+    { type: 'refactor', section: 'Changed' },
+    { type: 'revert', section: 'Removed' },
+    { type: 'docs', section: '### Docs', hidden: true },
+    { type: 'style', section: '### Styles', hidden: true },
+    { type: 'test', section: '### Tests', hidden: true },
+    { type: 'chore', section: '### Changed', hidden: true },
+    { type: 'ci', section: '### Changed', hidden: true },
+    { type: 'build', section: '### Changed', hidden: true },
+  ],
+  issueUrlFormat: '{{host}}/{{owner}}/{{repository}}/issues/{{id}}',
+  commitUrlFormat: '{{host}}/{{owner}}/{{repository}}/commit/{{hash}}',
+  compareUrlFormat: '{{host}}/{{owner}}/{{repository}}/compare/{{previousTag}}...{{currentTag}}',
+  userUrlFormat: '{{host}}/{{user}}',
+  packageFiles: ['package.json'],
+  bumpFiles: ['package.json'],
+  skip: {
+    commit: false,
+    changelog: false,
+  },
+  releaseCommitMessageFormat: 'chore(release): {{currentTag}}',
+};

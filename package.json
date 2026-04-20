@@ -1,6 +1,6 @@
 {
   "name": "vercel-env-create",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "license": "MIT",
   "description": "Generate and sync Next.js/Vercel-friendly .env templates from referenced variables.",
   "author": "itsbrex <github@itsbrex.dev> (https://itsbrex.dev)",
@@ -26,7 +26,11 @@
     "lint": "eslint src/**/*.ts test/**/*.ts",
     "typecheck": "tsc --noEmit",
     "format": "prettier src test --write",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "release": "standard-version",
+    "release:minor": "standard-version --release-as minor",
+    "release:patch": "standard-version --release-as patch",
+    "release:major": "standard-version --release-as major"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",
@@ -37,6 +41,7 @@
     "husky": "^9.1.7",
     "lint-staged": "^15.5.0",
     "prettier": "^3.5.3",
+    "standard-version": "^9.5.0",
     "tsup": "^8.5.0",
     "typescript": "^5.8.3",
     "vitest": "^3.2.4"
